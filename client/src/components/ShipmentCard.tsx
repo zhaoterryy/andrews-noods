@@ -23,19 +23,38 @@ function getAssetURL(asset: string) {
 
 export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps) {
   const { thumbnail, alt, name } = assetMap[shipment.UPC]
-  const { deleteShipment } = useMutations()
+  const { deleteShipment, setHasShipped } = useMutations()
   const [isLoading, setIsLoading] = useState(false)
+  const [showHasShipped, setShowHasShipped] = useState(shipment.hasShipped)
 
   const onDeleteClick = async () => {
     setIsLoading(true)
 
     try {
       await deleteShipment(shipment.shipmentId)
+      onShipmentDeleted(shipment.shipmentId)
+
+      return
     } catch (e) {
+      console.error('Failed to delete %s', shipment.shipmentId)
       console.error(e)
     }
 
-    onShipmentDeleted(shipment.shipmentId)
+    setIsLoading(false)
+  }
+
+  const onSetShippedClick = async () => {
+    setIsLoading(true)
+
+    try {
+      const { hasShipped } = await setHasShipped(shipment.shipmentId, !showHasShipped)
+      setShowHasShipped(hasShipped)
+    } catch (e) {
+      console.error('Failed to set shipped status %s', shipment.shipmentId)
+      console.error(e)
+    }
+
+    setIsLoading(false)
   }
 
   return (
@@ -53,7 +72,7 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
               <em>Limited edition run!</em><br />
             </>
           }
-          {shipment.hasShipped &&
+          {showHasShipped &&
             <>
               <em>On it's way!</em><br />
             </>
@@ -65,7 +84,7 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
         </p>
       </div>
       <div className="buttons">
-        <button className="set-shipped-btn">
+        <button className="set-shipped-btn" onClick={onSetShippedClick}>
           <img src={boatOutlineSvg} alt=""></img>
         </button>
         <button className="delete-btn" onClick={onDeleteClick}>

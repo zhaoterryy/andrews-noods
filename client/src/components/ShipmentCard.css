@@ -1,7 +1,7 @@
 .shipment-card {
   display: flex;
   height: 225px;
-  padding: 15px;
+  padding: 1rem;
   box-sizing: border-box;
   position: relative;
 
@@ -37,11 +37,11 @@
   }
 
   & > .info {
-    padding: 1rem;
+    padding: 0 1rem;
     display: flex;
     flex-direction: column;
     color: var(--color-beige);
-    justify-content: center;
+    justify-content: space-between;
     font-size: clamp(0.75rem, 0.75vw, 1rem);
 
     & > .title {
@@ -53,7 +53,7 @@
       color: var(--color-light-blue);
     }
 
-    & h1 {
+    & h1, & p {
       margin: 0;
     }
   }
