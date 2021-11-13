@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "tsc-watch --onSuccess 'node dist/index.js'"
@@ -16,6 +15,7 @@
     "@aws-sdk/lib-dynamodb": "^3.41.0",
     "@aws-sdk/util-dynamodb": "^3.41.0",
     "apollo-server": "^3.5.0",
+    "apollo-server-lambda": "^3.5.0",
     "graphql": "^15.7.2",
     "nanoid": "^3.1.30"
   },

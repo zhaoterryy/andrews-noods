@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloProvider, gql, InMemoryCache } from '@apollo/client'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import schema from '../../schema.graphql?raw'
+import schema from '../../apollo-serverless/schema.graphql?raw'
 import App from './App'
 import './index.css'
 

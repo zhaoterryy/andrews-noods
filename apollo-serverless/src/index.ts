@@ -1,10 +1,8 @@
-import { ApolloServer, gql } from 'apollo-server'
+import { ApolloServer, gql } from 'apollo-server-lambda'
 import { getShipments, getShipmentsOfUPC, getShipment, createShipment, setHasShipped, deleteShipment } from './dynamo-resolvers.js'
-import { promisify } from 'util'
-import { readFile } from 'fs'
+import { readFileSync } from 'fs'
 
-const file = await promisify(readFile)('../schema.graphql', 'utf8')
-
+const file = readFileSync('./schema.graphql', 'utf8')
 const typeDefs = gql(file)
 
 const resolvers = {
@@ -25,5 +23,4 @@ const server = new ApolloServer({
   resolvers
 })
 
-await server.listen()
-console.log('http://localhost:4000/')
+export const graphqlHandler = server.createHandler()
