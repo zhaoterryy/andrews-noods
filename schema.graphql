@@ -1,0 +1,27 @@
+scalar Date
+
+type Shipment {
+  shipmentId: ID!
+  UPC: String!
+  orderTime: Date!
+  numOrdered: Int!
+  isSpecialOrder: Boolean
+  hasShipped: Boolean
+}
+
+type Query {
+  shipments: [Shipment!]
+  shipmentsOfUPC(UPC: String!): [Shipment!]
+  shipment(shipmentId: ID!): Shipment
+}
+
+type Mutation {
+  createShipment(UPC: String!, quantity: Int!, specialOrder: Boolean): CreateShipmentResponse!
+  setHasShipped(shipmentId: ID!, hasShipped: Boolean!): Shipment!
+  deleteShipment(shipmentId: ID!): Shipment!
+}
+
+type CreateShipmentResponse {
+  shipmentId: ID!
+  orderTime: Date!
+}

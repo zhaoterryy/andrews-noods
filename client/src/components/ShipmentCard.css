@@ -1,0 +1,65 @@
+.shipment-card {
+  background-color: var(--color-off-black);
+  display: flex;
+  height: 225px;
+  padding: 15px;
+  border-radius: 12px;
+  box-sizing: border-box;
+
+  --spacing: 24px;
+  width: calc(50% - var(--spacing));
+  margin: calc(var(--spacing) / 2);
+
+  & > img.thumbnail {
+    width: 195px;
+    object-fit: contain;
+  }
+
+  & > .info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-beige);
+    justify-content: center;
+    font-size: clamp(0.875rem, 0.75vw, 1rem);
+
+    & > .title {
+      color: white;
+      font-size: clamp(1rem, 1.1vw, 1.5rem);
+    }
+  }
+
+  & > .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 1rem;
+    width: 56px;
+    border-left: 1px solid var(--color-accent);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-accent);
+    }
+
+    & > button {
+      background: none;
+      outline: none;
+      border: none;
+      width: 100%;
+      min-width: 40px;
+      height: 40px;
+      cursor: pointer;
+      
+      & > img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}

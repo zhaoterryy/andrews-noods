@@ -1,35 +1,11 @@
 import { ApolloServer, gql } from 'apollo-server'
 import { getShipments, getShipmentsOfUPC, getShipment, createShipment, setHasShipped, deleteShipment } from './dynamo-resolvers.js'
+import { promisify } from 'util'
+import { readFile } from 'fs'
 
-const typeDefs = gql`
-  scalar Date
+const file = await promisify(readFile)('../schema.graphql', 'utf8')
 
-  type Shipment {
-    shipmentId: ID!
-    UPC: String!
-    orderTime: Date!
-    numOrdered: Int!
-    isSpecialOrder: Boolean
-    hasShipped: Boolean
-  }
-
-  type Query {
-    shipments: [Shipment!]
-    shipmentsOfUPC(UPC: String!): [Shipment!]
-    shipment(shipmentId: ID!): Shipment
-  }
-
-  type Mutation {
-    createShipment(UPC: String!, quantity: Int!, specialOrder: Boolean): CreateShipmentResponse!
-    setHasShipped(shipmentId: ID!, hasShipped: Boolean!): Shipment!
-    deleteShipment(shipmentId: ID!): Shipment!
-  }
-
-  type CreateShipmentResponse {
-    shipmentId: ID!
-    orderTime: Date!
-  }
-`
+const typeDefs = gql(file)
 
 const resolvers = {
   Query: {
