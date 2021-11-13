@@ -6,6 +6,7 @@ import trashOutlineSvg from '../assets/trash-outline.svg'
 import boatOutlineSvg from '../assets/boat-outline.svg'
 import { useMutations } from '../hooks/mutations'
 import { useState } from 'react'
+import { getAssetURL } from '../utils/get-asset-url'
 
 interface assetMap {
   [key: string]: string
@@ -14,11 +15,6 @@ interface assetMap {
 type ShipmentCardProps = {
   shipment: Shipment
   onShipmentDeleted: (shipmentId: string) => void
-}
-
-function getAssetURL(asset: string) {
-  const assetMapUrl = new URL('../utils/asset-map.json', import.meta.url).href
-  return new URL(asset, assetMapUrl).href
 }
 
 export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps) {
@@ -85,10 +81,10 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
       </div>
       <div className="buttons">
         <button className="set-shipped-btn" onClick={onSetShippedClick}>
-          <img src={boatOutlineSvg} alt=""></img>
+          <img src={boatOutlineSvg} alt="ship button white outline"></img>
         </button>
         <button className="delete-btn" onClick={onDeleteClick}>
-          <img src={trashOutlineSvg} alt=""></img>
+          <img src={trashOutlineSvg} alt="trash can button white outline"></img>
         </button>
       </div>
     </div>

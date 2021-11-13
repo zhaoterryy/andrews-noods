@@ -116,7 +116,6 @@ export const deleteShipment = async (shipmentId: string) => {
 
   try {
     const results = await dynamoClient.send(new DeleteItemCommand(params))
-    console.log(results)
     return unmarshall(results.Attributes)
   } catch (err) {
     console.error(err)

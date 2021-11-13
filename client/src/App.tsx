@@ -3,15 +3,24 @@ import { ShipmentCard } from './components/ShipmentCard'
 import './App.css'
 import { useEffect, useState } from 'react'
 import type { Shipment } from './utils/schema-types'
+import { CreateShipmentCard } from './components/CreateShipmentCard'
 
 function App() {
   const { shipments } = useGetShipments()
   const [shipmentsToShow, setShipmentsToShow] = useState(new Array<Shipment>())
 
-  useEffect(() => setShipmentsToShow(shipments), [shipments])
+  useEffect(() => {
+    console.log('hit')
+    setShipmentsToShow(shipments)
+  }, [shipments])
 
   const onShipmentDeleted = (shipmentId: string) => {
     setShipmentsToShow(shipmentsToShow.filter(s => s.shipmentId !== shipmentId))
+  }
+
+  const onShipmentCreated = (shipment: Shipment) => {
+    console.log(shipment)
+    setShipmentsToShow([...shipmentsToShow, shipment])
   }
 
   return (
@@ -24,9 +33,7 @@ function App() {
               shipment={s}
               onShipmentDeleted={onShipmentDeleted} />
           ))}
-          <div className="create-shipment-card shipment-card">
-            TODO
-          </div>
+          <CreateShipmentCard onShipmentCreated={onShipmentCreated} />
         </div>
       </header>
     </div>

@@ -30,6 +30,22 @@ const SET_HAS_SHIPPED = gql`
   }
 `
 
+type CreateShipmentResponse = {
+  createShipment: {
+    shipmentId: string
+    orderTime: Date
+  }
+}
+
+const CREATE_SHIPMENT = gql`
+  mutation Mutation($upc: String!, $quantity: Int!, $specialOrder: Boolean) {
+    createShipment(UPC: $upc, quantity: $quantity, specialOrder: $specialOrder) {
+      shipmentId
+      orderTime
+    }
+  }
+`
+
 export function useMutations() {
   const client = useApolloClient()
 
@@ -67,5 +83,22 @@ export function useMutations() {
     }
   }
 
-  return { deleteShipment, setHasShipped }
+  const createShipment = async (upc: string, quantity: number, specialOrder: boolean) => {
+    try {
+      const result: FetchResult<CreateShipmentResponse> = await client.mutate({
+        mutation: CREATE_SHIPMENT,
+        variables: { upc, quantity, specialOrder }
+      })
+
+      if (result.data == null) {
+        return Promise.reject(new Error('Server internal error'))
+      }
+
+      return result.data.createShipment
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
+  return { deleteShipment, setHasShipped, createShipment }
 }
