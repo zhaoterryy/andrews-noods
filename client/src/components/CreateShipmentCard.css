@@ -1,4 +1,4 @@
-.create-shipment-card {
+.shipment-card.create-shipment-card {
   background-color: #fafafa;
 
   & .info {
