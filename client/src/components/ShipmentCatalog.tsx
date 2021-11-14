@@ -2,12 +2,13 @@ import { createHttpLink, useApolloClient } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import fetchIcon from '../assets/cloud-download-outline.svg'
 import { useAuth } from '../hooks/auth'
-import { useGetAllShipments, useGetShipmentsOfUPC } from '../hooks/queries'
+import { useGetAllShipments, useGetDecayingShipments } from '../hooks/queries'
+import '../styles/lds-ripple.css'
 import { Shipment, ValidUPC, validUPCs } from '../utils/schema-types'
 import { CreateShipmentCard } from './CreateShipmentCard'
 import { ShipmentCard } from './ShipmentCard'
-import fetchIcon from '../assets/cloud-download-outline.svg'
 import './ShipmentCatalog.css'
 
 export function ShipmentCatalog() {
@@ -32,23 +33,42 @@ export function ShipmentCatalog() {
   const client = useApolloClient()
   client.setLink(authLink.concat(httpLink))
 
-  const [allShipments, getAllShipments] = useGetAllShipments()
-  const [UPCFilteredShipments, getShipmentsOfUPC] = useGetShipmentsOfUPC()
   const [shipments, setShipments] = useState(new Array<Shipment>())
   const [shipmentsToShow, setShipmentsToShow] = useState(new Array<Shipment>())
+
+  const [allShipments, getAllShipments] = useGetAllShipments()
+  const [decayingShipments, getDecayingShipments] = useGetDecayingShipments()
+
   const [currentUPCFilter, setCurrentUPCFilter] = useState<ValidUPC | ''>('')
+  const [isDecayFilterActive, setDecayFilterActive] = useState(false)
+
+  const [isFetching, setIsFetching] = useState(false)
+
+  const fetch = async () => {
+    setIsFetching(true)
+
+    let newShipments
+    if (isDecayFilterActive) {
+      newShipments = await getDecayingShipments(currentUPCFilter === '' ? undefined : currentUPCFilter)
+    } else {
+      newShipments = await getAllShipments()
+    }
+
+    setIsFetching(false)
+    setShipments(newShipments)
+  }
 
   useEffect(() => {
-    getAllShipments()
+    fetch()
   }, [])
 
   useEffect(() => {
-    setShipments(allShipments)
-  }, [allShipments])
+    fetch()
+  }, [isDecayFilterActive])
 
   useEffect(() => {
-    setShipments(UPCFilteredShipments)
-  }, [UPCFilteredShipments])
+    if (isDecayFilterActive) fetch()
+  }, [currentUPCFilter])
 
   useEffect(() => {
     if (currentUPCFilter === '') {
@@ -63,12 +83,8 @@ export function ShipmentCatalog() {
     setCurrentUPCFilter(UPC)
   }
 
-  const onFetch = () => {
-    if (currentUPCFilter === '') {
-      getAllShipments()
-    } else {
-      getShipmentsOfUPC(currentUPCFilter)
-    }
+  const onDecayFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setDecayFilterActive(e.target.checked)
   }
 
   const onShipmentDeleted = (shipmentId: string) => {
@@ -82,16 +98,28 @@ export function ShipmentCatalog() {
   return (
     <div className="shipment-catalog">
       <div className="filter-container">
-        <label htmlFor="UPC-filter-change">UPC Filter: </label>
-        <select id="UPC-filter-change" onChange={onUPCFilterChange} value={currentUPCFilter}>
-          <option value="">None</option>
-          {
-            validUPCs.map(upc => <option key={upc} value={upc}>{upc}</option>)
-          }
-        </select>
-        <button className="fetch-btn" onClick={onFetch}>
-          <img src={fetchIcon} />
-        </button>
+        <div>
+          <label htmlFor="UPC-filter-change">UPC Filter: </label>
+          <select id="UPC-filter-change" onChange={onUPCFilterChange} value={currentUPCFilter}>
+            <option value="">None</option>
+            {
+              validUPCs.map(upc => <option key={upc} value={upc}>{upc}</option>)
+            }
+          </select>
+        </div>
+        <div className="decay-checkbox-wrapper">
+          <input type="checkbox" name="decay-checkbox" id="decay-checkbox" onChange={onDecayFilterChange} checked={isDecayFilterActive} />
+          <label htmlFor="decay-checkbox">Urgent only (orders that have been waiting the longest)</label>
+        </div>
+        <div className="fetch-btn-wrapper">
+          {isFetching ? (
+            <div className="lds-ripple spinner"><div></div><div></div></div>
+          ) : (
+            <button className="fetch-btn" onClick={fetch}>
+              <img src={fetchIcon} />
+            </button>
+          )}
+        </div>
       </div>
       <div className="shipment-card-container">
         {shipmentsToShow.map(s => (
@@ -100,7 +128,7 @@ export function ShipmentCatalog() {
             shipment={s}
             onShipmentDeleted={onShipmentDeleted} />
         ))}
-        {currentUPCFilter === '' && <CreateShipmentCard onShipmentCreated={onShipmentCreated} />}
+        {currentUPCFilter === '' && !isDecayFilterActive && <CreateShipmentCard onShipmentCreated={onShipmentCreated} />}
       </div>
     </div>
   )

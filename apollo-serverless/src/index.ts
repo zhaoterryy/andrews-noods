@@ -1,5 +1,5 @@
 import { ApolloServer, gql, UserInputError } from 'apollo-server-lambda'
-import { getShipments, getShipmentsOfUPC, getShipment, createShipment, setHasShipped, deleteShipment } from './dynamo-resolvers.js'
+import { getShipments, getShipmentsOfUPC, getShipment, createShipment, setHasShipped, deleteShipment, getDecayingShipments } from './dynamo-resolvers.js'
 import { readFileSync } from 'fs'
 import { GraphQLScalarType } from 'graphql'
 
@@ -31,7 +31,8 @@ const resolvers = {
   Query: {
     shipments: () => getShipments(),
     shipmentsOfUPC: (_parent, { UPC }) => getShipmentsOfUPC(UPC),
-    shipment: (_parent, { shipmentId }) => getShipment(shipmentId)
+    shipment: (_parent, { shipmentId }) => getShipment(shipmentId),
+    decayingShipments: (_parent, { UPC }) => getDecayingShipments(UPC)
   },
   Mutation: {
     createShipment: (_parent, { UPC, quantity, specialOrder }) => createShipment(UPC, quantity, specialOrder),

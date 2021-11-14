@@ -1,5 +1,5 @@
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { DynamoDBClient, ScanCommand, ScanCommandInput, GetItemCommand, GetItemCommandInput, PutItemCommand, PutItemCommandInput, UpdateItemCommand, UpdateItemCommandInput, DeleteItemCommandInput, DeleteItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, ScanCommand, ScanCommandInput, GetItemCommand, GetItemCommandInput, PutItemCommand, PutItemCommandInput, UpdateItemCommand, UpdateItemCommandInput, DeleteItemCommandInput, DeleteItemCommand, QueryCommandInput, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { nanoid } from 'nanoid'
 
 const TABLE_NAME = 'instant-noodle-shipments'
@@ -48,6 +48,31 @@ export const getShipment = async (shipmentId: string) => {
   try {
     const results = await dynamoClient.send(new GetItemCommand(params))
     return unmarshall(results.Item)
+  } catch (err) {
+    console.error(err)
+    return err
+  }
+}
+
+export const getDecayingShipments = async (UPC?: string) => {
+  const params: QueryCommandInput = {
+    TableName: TABLE_NAME,
+    IndexName: 'hasNotShipped-orderTime-index',
+    KeyConditionExpression: 'hasNotShipped = :hasNotShipped AND orderTime <= :now',
+    ExpressionAttributeValues: {
+      ':hasNotShipped': { S: 'true' },
+      ':now': { S: new Date().toISOString() }
+    }
+  }
+
+  if (UPC) {
+    params.FilterExpression = 'UPC = :UPC'
+    params.ExpressionAttributeValues[':UPC'] = { S: UPC }
+  }
+
+  try {
+    const results = await dynamoClient.send(new QueryCommand(params))
+    return results.Items!.map(item => unmarshall(item))
   } catch (err) {
     console.error(err)
     return err
