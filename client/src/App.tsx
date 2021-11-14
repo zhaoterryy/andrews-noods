@@ -1,14 +1,10 @@
-import { ApolloClient, ApolloProvider, createHttpLink, gql, InMemoryCache, useApolloClient } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
-import { useEffect, useRef, useState } from 'react'
+import { ApolloClient, ApolloProvider, gql, InMemoryCache } from '@apollo/client'
+import { useRef } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import schema from '../../apollo-serverless/schema.graphql?raw'
 import './App.css'
-import { CreateShipmentCard } from './components/CreateShipmentCard'
-import { ShipmentCard } from './components/ShipmentCard'
+import { ShipmentCatalog } from './components/ShipmentCatalog'
 import { AuthProvider, useAuth } from './hooks/auth'
-import { useGetShipments } from './hooks/queries'
-import type { Shipment } from './utils/schema-types'
 
 export function App() {
   const client = new ApolloClient({
@@ -31,58 +27,6 @@ export function App() {
   )
 }
 
-function ShipmentCatalog() {
-  const { isAuthenticated, token } = useAuth()
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />
-  }
-
-  const authLink = setContext((_, { headers }) => {
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : ''
-      }
-    }
-  })
-
-  const httpLink = createHttpLink({
-    uri: import.meta.env.VITE_GRAPHQL_URI
-  })
-
-  const client = useApolloClient()
-  client.setLink(authLink.concat(httpLink))
-
-  const { shipments } = useGetShipments()
-  const [shipmentsToShow, setShipmentsToShow] = useState(new Array<Shipment>())
-
-  useEffect(() => {
-    setShipmentsToShow(shipments)
-  }, [shipments])
-
-  const onShipmentDeleted = (shipmentId: string) => {
-    setShipmentsToShow(shipmentsToShow.filter(s => s.shipmentId !== shipmentId))
-  }
-
-  const onShipmentCreated = (shipment: Shipment) => {
-    setShipmentsToShow([...shipmentsToShow, shipment])
-  }
-
-  return (
-    <div className="shipment-catalog">
-      <div className="shipment-card-container">
-        {shipmentsToShow.map(s => (
-          <ShipmentCard
-            key={s.shipmentId}
-            shipment={s}
-            onShipmentDeleted={onShipmentDeleted} />
-        ))}
-        <CreateShipmentCard onShipmentCreated={onShipmentCreated} />
-      </div>
-    </div>
-  )
-}
-
 function Login() {
   const { isAuthenticated, authenticate } = useAuth()
   const usernameField = useRef<HTMLInputElement>(null)
@@ -96,7 +40,7 @@ function Login() {
     const Username = usernameField.current.value
     const Password = passwordField.current.value
 
-    const token = await authenticate({ Username, Password })
+    await authenticate({ Username, Password })
   }
 
   return (
