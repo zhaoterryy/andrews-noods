@@ -10,7 +10,7 @@ const GET_SHIPMENTS = gql`
       orderTime
       numOrdered
       isSpecialOrder
-      hasShipped
+      hasNotShipped
     }
   }
 `
@@ -23,7 +23,7 @@ const GET_SHIPMENTS_OF_UPC = gql`
       orderTime
       numOrdered
       isSpecialOrder
-      hasShipped
+      hasNotShipped
     }
   }
 `

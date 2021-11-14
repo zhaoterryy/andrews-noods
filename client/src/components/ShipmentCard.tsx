@@ -21,7 +21,7 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
   const { thumbnail, alt, name } = assetMap[shipment.UPC]
   const { deleteShipment, setHasShipped } = useMutations()
   const [isLoading, setIsLoading] = useState(false)
-  const [showHasShipped, setShowHasShipped] = useState(shipment.hasShipped)
+  const [showHasShipped, setShowHasShipped] = useState(!shipment.hasNotShipped)
 
   const onDeleteClick = async () => {
     setIsLoading(true)

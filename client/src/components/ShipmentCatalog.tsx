@@ -51,7 +51,6 @@ export function ShipmentCatalog() {
   }, [UPCFilteredShipments])
 
   useEffect(() => {
-    console.log(shipments)
     if (currentUPCFilter === '') {
       setShipmentsToShow(shipments)
     } else {
@@ -65,7 +64,6 @@ export function ShipmentCatalog() {
   }
 
   const onFetch = () => {
-    console.log('click')
     if (currentUPCFilter === '') {
       getAllShipments()
     } else {

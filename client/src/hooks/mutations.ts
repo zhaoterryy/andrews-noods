@@ -17,7 +17,7 @@ const DELETE_SHIPMENT = gql`
 type SetHasShippedResponse = {
   setHasShipped: {
     shipmentId: string
-    hasShipped: boolean
+    hasNotShipped: boolean
   }
 }
 
@@ -25,7 +25,7 @@ const SET_HAS_SHIPPED = gql`
   mutation Mutation($shipmentId: ID!, $hasShipped: Boolean!) {
     setHasShipped(shipmentId: $shipmentId, hasShipped: $hasShipped) {
       shipmentId
-      hasShipped
+      hasNotShipped
     }
   }
 `
@@ -77,7 +77,10 @@ export function useMutations() {
         return Promise.reject(new Error('No data returned - double check shipmentId'))
       }
 
-      return result.data.setHasShipped
+      return {
+        shipmentId: result.data.setHasShipped.shipmentId,
+        hasShipped: !result.data.setHasShipped.hasNotShipped
+      }
     } catch (error) {
       return Promise.reject(error)
     }

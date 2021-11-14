@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc-watch --onSuccess 'node dist/index.js'"
+    "deploy": "tsc && sls deploy function -f graphql"
   },
   "keywords": [],
   "author": "",

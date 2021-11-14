@@ -7,5 +7,5 @@ export type Shipment = {
   orderTime: Date
   numOrdered: number
   isSpecialOrder?: boolean
-  hasShipped?: boolean
+  hasNotShipped?: boolean
 }

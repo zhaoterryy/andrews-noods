@@ -46,7 +46,7 @@ function Login() {
   return (
     <div className="login">
       <div className="title-wrapper">
-        <h1>Instant Noodle Shipments</h1>
+        <h1>Andrew's Noods</h1>
       </div>
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="username">Username</label>

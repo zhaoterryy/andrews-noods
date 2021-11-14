@@ -63,7 +63,8 @@ export const createShipment = async (UPC: string, quantity: number, specialOrder
       shipmentId: { S: shipmentId },
       UPC: { S: UPC },
       numOrdered: { N: quantity.toString() },
-      orderTime: { S: orderTime }
+      orderTime: { S: orderTime },
+      hasNotShipped: { S: 'true' }
     }
   }
 
@@ -89,11 +90,16 @@ export const setHasShipped = async (shipmentId: string, hasShipped: boolean) => 
     Key: {
       shipmentId: { S: shipmentId }
     },
-    UpdateExpression: 'set hasShipped = :hasShipped',
-    ExpressionAttributeValues: {
-      ':hasShipped': { BOOL: hasShipped }
-    },
     ReturnValues: 'ALL_NEW'
+  }
+
+  if (!hasShipped) {
+    params.UpdateExpression = 'set hasNotShipped = :hasNotShipped'
+    params.ExpressionAttributeValues = {
+      ':hasNotShipped': { S: 'true' }
+    }
+  } else {
+    params.UpdateExpression = 'remove hasNotShipped'
   }
 
   try {

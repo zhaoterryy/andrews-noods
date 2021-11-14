@@ -53,7 +53,8 @@ export function CreateShipmentCard({ onShipmentCreated }: CreateShipmentCardProp
             orderTime,
             UPC,
             numOrdered: quantity,
-            isSpecialOrder
+            isSpecialOrder,
+            hasNotShipped: true
           }
 
           onShipmentCreated(shipment)

@@ -1,12 +1,13 @@
 scalar Date
+scalar HasNotShipped
 
 type Shipment {
   shipmentId: ID!
   UPC: String!
   orderTime: Date!
   numOrdered: Int!
+  hasNotShipped: HasNotShipped
   isSpecialOrder: Boolean
-  hasShipped: Boolean
 }
 
 type Query {
