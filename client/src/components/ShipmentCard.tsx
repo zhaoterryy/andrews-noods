@@ -1,12 +1,11 @@
 import type { Shipment } from '../utils/schema-types'
 import './ShipmentCard.css'
 import '../styles/lds-ellipsis.css'
-import assetMap from '../utils/asset-map.json'
+import assetMap from '../utils/asset-map'
 import trashOutlineSvg from '../assets/trash-outline.svg'
 import boatOutlineSvg from '../assets/boat-outline.svg'
 import { useMutations } from '../hooks/mutations'
 import { useState } from 'react'
-import { getAssetURL } from '../utils/get-asset-url'
 
 interface assetMap {
   [key: string]: string
@@ -58,7 +57,7 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
       {isLoading && (<div className="loading-overlay"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>)}
       <img
         className="thumbnail"
-        src={getAssetURL(thumbnail)}
+        src={thumbnail}
         alt={alt} />
       <div className="info">
         <h1 className="title">{name}</h1>

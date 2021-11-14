@@ -2,8 +2,7 @@ import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react'
 import addIcon from '../assets/bag-add-outline.svg'
 import placeholderIcon from '../assets/pizza.svg'
 import { useMutations } from '../hooks/mutations'
-import assetMap from '../utils/asset-map.json'
-import { getAssetURL } from '../utils/get-asset-url'
+import assetMap from '../utils/asset-map'
 import { Shipment, ValidUPC, validUPCs } from '../utils/schema-types'
 import './CreateShipmentCard.css'
 import './ShipmentCard.css'
@@ -72,7 +71,7 @@ export function CreateShipmentCard({ onShipmentCreated }: CreateShipmentCardProp
     <div className="create-shipment-card shipment-card">
       {isLoading && (<div className="loading-overlay"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>)}
       {UPC ? (
-        <img className="thumbnail" src={getAssetURL(assetMap[UPC].thumbnail)} alt={getAssetURL(assetMap[UPC].alt)} />
+        <img className="thumbnail" src={assetMap[UPC].thumbnail} alt={(assetMap[UPC].alt)} />
       ) : (
         <img className="thumbnail" style={{ transform: 'scale(0.5)', opacity: 0.5 }} src={placeholderIcon} alt="pizza placeholder" />
       )}
