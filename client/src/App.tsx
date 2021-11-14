@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloProvider, createHttpLink, gql, InMemoryCache, useApolloClient } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { useEffect, useRef, useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import schema from '../../apollo-serverless/schema.graphql?raw'
 import './App.css'
 import { CreateShipmentCard } from './components/CreateShipmentCard'
@@ -8,7 +9,6 @@ import { ShipmentCard } from './components/ShipmentCard'
 import { AuthProvider, useAuth } from './hooks/auth'
 import { useGetShipments } from './hooks/queries'
 import type { Shipment } from './utils/schema-types'
-import { setContext } from '@apollo/client/link/context'
 
 export function App() {
   const client = new ApolloClient({

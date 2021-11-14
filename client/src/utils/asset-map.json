@@ -8,5 +8,25 @@
     "thumbnail": "../assets/migoreng.webp",
     "alt": "85g Indomie Mi Goreng Instant Fried Noodles",
     "name": "Indomie Mi Goreng Instant Fried Noodles"
+  },
+  "031146007400": {
+    "thumbnail": "../assets/52611227-2.jpg",
+    "alt": "OTTOGI Jin Ramen Mild",
+    "name": "[Ottogi] Jin Ramyun (Mild Taste)"
+  },
+  "031146150304": {
+    "thumbnail": "../assets/1846-195956261.webp",
+    "alt": "Nongshim Neoguri Udon type noodles spicy seafood",
+    "name": "Nong Shim Neoguri Spicy Seafood Noodles"
+  },
+  "648436100590": {
+    "thumbnail": "../assets/1846-648722391.webp",
+    "alt": "Paldo jjajangmen noodle packet",
+    "name": "Paldo Jjajangmen Instant Noodles with Black Bean Sauce"
+  },
+  "B075VM9N96": {
+    "thumbnail": "../assets/71FKs8dQBHS._AC_SL1500_.jpg",
+    "alt": "buldak spicy instant noodles packet",
+    "name": "Samyang Hek Buldak Extra Spicy Roasted Chicken Ramen Nuclear Edition"
   }
 }

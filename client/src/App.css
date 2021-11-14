@@ -11,6 +11,7 @@
   justify-content: center;
   flex-direction: column;
   height: 100vh;
+  background: white;
 
   & .title-wrapper {
     background-color: white;
