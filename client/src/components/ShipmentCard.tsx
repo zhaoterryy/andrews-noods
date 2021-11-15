@@ -22,14 +22,17 @@ export function ShipmentCard({ showTimeSinceOrder, shipment, onShipmentDeleted }
   const { deleteShipment, setHasShipped } = useMutations()
   const [isLoading, setIsLoading] = useState(false)
   const [showHasShipped, setShowHasShipped] = useState(!shipment.hasNotShipped)
-  const [timeSinceOrder, setTimeSinceOrder] = useState(0)
+  const [timeSinceOrder, setTimeSinceOrder] = useState<number>()
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const updateTimeSinceOrder = () => {
       const now = new Date().getTime()
       const diff = (now - new Date(shipment.orderTime).getTime())
       setTimeSinceOrder(diff)
-    }, 1000)
+    }
+
+    updateTimeSinceOrder()
+    const interval = setInterval(updateTimeSinceOrder, 1000)
     return () => clearInterval(interval)
   }, [shipment])
 
@@ -85,7 +88,7 @@ export function ShipmentCard({ showTimeSinceOrder, shipment, onShipmentDeleted }
           }
           UPC: {shipment.UPC}<br />
           Ordered at: {new Date(shipment.orderTime).toLocaleString()}<br />
-          {showTimeSinceOrder && (
+          {showTimeSinceOrder && timeSinceOrder && (
             <>
               Time since order: <span style={{ color: timeSinceOrder >= 300000 ? 'red' : '' }}>{new Date(timeSinceOrder).toISOString().substring(11, 19)}</span><br />
             </>
