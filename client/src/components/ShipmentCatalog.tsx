@@ -1,6 +1,6 @@
 import { createHttpLink, useApolloClient } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import fetchIcon from '../assets/cloud-download-outline.svg'
 import { useAuth } from '../hooks/auth'
@@ -10,6 +10,7 @@ import { Shipment, ValidUPC, validUPCs } from '../utils/schema-types'
 import { CreateShipmentCard } from './CreateShipmentCard'
 import { ShipmentCard } from './ShipmentCard'
 import './ShipmentCatalog.css'
+import addShipmentIcon from '../assets/add-circle.svg'
 
 export function ShipmentCatalog() {
   const { isAuthenticated, token } = useAuth()
@@ -43,6 +44,7 @@ export function ShipmentCatalog() {
   const [isDecayFilterActive, setDecayFilterActive] = useState(false)
 
   const [isFetching, setIsFetching] = useState(false)
+  const createShipmentElement = useRef<HTMLDivElement>(null)
 
   const fetch = async () => {
     setIsFetching(true)
@@ -95,10 +97,16 @@ export function ShipmentCatalog() {
     setShipments([...shipments, shipment])
   }
 
+  const onAddShipmentClick = () => {
+    createShipmentElement.current!.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
+
   return (
     <div className="shipment-catalog">
       <div className="filter-container">
-        <div>
+        <div className="UPC-filter-wrapper">
           <label htmlFor="UPC-filter-change">UPC Filter: </label>
           <select id="UPC-filter-change" onChange={onUPCFilterChange} value={currentUPCFilter}>
             <option value="">None</option>
@@ -128,8 +136,13 @@ export function ShipmentCatalog() {
             shipment={s}
             onShipmentDeleted={onShipmentDeleted} />
         ))}
-        {currentUPCFilter === '' && !isDecayFilterActive && <CreateShipmentCard onShipmentCreated={onShipmentCreated} />}
+        {currentUPCFilter === '' && !isDecayFilterActive && <CreateShipmentCard onShipmentCreated={onShipmentCreated} ref={createShipmentElement}/>}
       </div>
+      {currentUPCFilter === '' && !isDecayFilterActive && (
+        <button className="add-shipment-btn" onClick={onAddShipmentClick}>
+          <img src={addShipmentIcon} alt="floating add shipment button" />
+        </button>
+      )}
     </div>
   )
 }

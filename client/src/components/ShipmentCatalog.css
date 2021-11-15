@@ -1,29 +1,54 @@
 .shipment-catalog {
-  max-width: min(80vw, 1920px);
+  @media (min-width: 768px) {
+    max-width: 90vw;
+  }
+
+  @media (min-width: 1099px) {
+    max-width: min(80vw, 1920px);
+  }
   margin: auto;
 }
 
 .filter-container {
   padding: 12px;
+  padding-bottom: 0;
   position: relative;
+  display: grid;
+  grid-template-areas:
+    "UPC fetch-btn"
+    "decay fetch-btn";
 
-  & > div {
-    display: inline-block;
+  @media (min-width: 1130px) {
+    grid-template-columns: 220px auto 220px !important;
+  }
 
-    &.decay-checkbox-wrapper {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+  @media (min-width: 1099px) {
+    grid-template-columns: 220px auto 180px;
+    grid-template-areas:
+      "UPC decay fetch-btn";
+  }
+
+  font-size: clamp(0.75rem, 2vw, 1rem);
+
+  & > .UPC-filter-wrapper {
+    grid-area: UPC;
+    place-self: center start;
+  }
+
+  & > .decay-checkbox-wrapper {
+    grid-area: decay;
+    @media (min-width: 1099px) {
+      place-self: center;
     }
   }
 
   & > .fetch-btn-wrapper {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+    grid-area: fetch-btn;
+    place-self: center end;
     width: 32px;
     height: 32px;
     --spinner-radius: 28px;
+    position: relative;
 
     & > * {
       position: absolute;
@@ -47,4 +72,16 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+}
+
+
+button.add-shipment-btn {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  background: none;
+  border: none;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
 }

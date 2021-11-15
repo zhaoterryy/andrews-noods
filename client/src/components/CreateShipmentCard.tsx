@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react'
+import { ChangeEvent, ForwardedRef, forwardRef, useRef, useState } from 'react'
 import addIcon from '../assets/bag-add-outline.svg'
 import placeholderIcon from '../assets/pizza.svg'
 import { useMutations } from '../hooks/mutations'
@@ -11,7 +11,7 @@ type CreateShipmentCardProps = {
   onShipmentCreated: (shipment: Shipment) => void
 }
 
-export function CreateShipmentCard({ onShipmentCreated }: CreateShipmentCardProps) {
+export const CreateShipmentCard = forwardRef(({ onShipmentCreated }: CreateShipmentCardProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { createShipment } = useMutations()
   const [UPC, setUPC] = useState<ValidUPC | ''>('')
   const quantityField = useRef<HTMLInputElement>(null)
@@ -68,7 +68,7 @@ export function CreateShipmentCard({ onShipmentCreated }: CreateShipmentCardProp
   }
 
   return (
-    <div className="create-shipment-card shipment-card">
+    <div className="create-shipment-card shipment-card" ref={ref}>
       {isLoading && (<div className="loading-overlay"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>)}
       {UPC ? (
         <img className="thumbnail" src={assetMap[UPC].thumbnail} alt={(assetMap[UPC].alt)} />
@@ -100,4 +100,4 @@ export function CreateShipmentCard({ onShipmentCreated }: CreateShipmentCardProp
       </div>
     </div>
   )
-}
+})
