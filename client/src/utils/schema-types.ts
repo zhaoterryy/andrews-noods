@@ -4,7 +4,7 @@ export type ValidUPC = typeof validUPCs[number]
 export type Shipment = {
   shipmentId: string
   UPC: ValidUPC
-  orderTime: Date
+  orderTime: string
   numOrdered: number
   isSpecialOrder?: boolean
   hasNotShipped?: boolean

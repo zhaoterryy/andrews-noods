@@ -5,22 +5,33 @@ import assetMap from '../utils/asset-map'
 import trashOutlineSvg from '../assets/trash-outline.svg'
 import boatOutlineSvg from '../assets/boat-outline.svg'
 import { useMutations } from '../hooks/mutations'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface assetMap {
   [key: string]: string
 }
 
 type ShipmentCardProps = {
+  showTimeSinceOrder?: boolean
   shipment: Shipment
   onShipmentDeleted: (shipmentId: string) => void
 }
 
-export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps) {
+export function ShipmentCard({ showTimeSinceOrder, shipment, onShipmentDeleted }: ShipmentCardProps) {
   const { thumbnail, alt, name } = assetMap[shipment.UPC]
   const { deleteShipment, setHasShipped } = useMutations()
   const [isLoading, setIsLoading] = useState(false)
   const [showHasShipped, setShowHasShipped] = useState(!shipment.hasNotShipped)
+  const [timeSinceOrder, setTimeSinceOrder] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime()
+      const diff = (now - new Date(shipment.orderTime).getTime())
+      setTimeSinceOrder(diff)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [shipment])
 
   const onDeleteClick = async () => {
     setIsLoading(true)
@@ -74,6 +85,11 @@ export function ShipmentCard({ shipment, onShipmentDeleted }: ShipmentCardProps)
           }
           UPC: {shipment.UPC}<br />
           Ordered at: {new Date(shipment.orderTime).toLocaleString()}<br />
+          {showTimeSinceOrder && (
+            <>
+              Time since order: <span style={{ color: timeSinceOrder >= 300000 ? 'red' : '' }}>{new Date(timeSinceOrder).toISOString().substring(11, 19)}</span><br />
+            </>
+          )}
           Quantity: {shipment.numOrdered}<br />
           Shipment ID: {shipment.shipmentId}
         </p>

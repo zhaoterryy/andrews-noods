@@ -134,6 +134,7 @@ export function ShipmentCatalog() {
           <ShipmentCard
             key={s.shipmentId}
             shipment={s}
+            showTimeSinceOrder={isDecayFilterActive}
             onShipmentDeleted={onShipmentDeleted} />
         ))}
         {currentUPCFilter === '' && !isDecayFilterActive && <CreateShipmentCard onShipmentCreated={onShipmentCreated} ref={createShipmentElement}/>}

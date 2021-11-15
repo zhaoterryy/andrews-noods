@@ -33,7 +33,7 @@ const SET_HAS_SHIPPED = gql`
 type CreateShipmentResponse = {
   createShipment: {
     shipmentId: string
-    orderTime: Date
+    orderTime: string
   }
 }
 
